@@ -37,4 +37,6 @@ Again, this is the primary key on your Profile
 
 The `API Key` and the `X-Reference-Key` is are going to be combined create an `Authorization Key`
 To do this just combine the two ie `APIKey + X-Reference-Key` and then encode them to **Base64**.
-- ![#f03c15] (https://placehold.it/15/f03c15/000000?text=+) `Hold tight to that Authorization, its going to be the circle of Everything!`
+```diff
+- Hold tight to that Authorization, its going to be the circle of Everything!
+```
