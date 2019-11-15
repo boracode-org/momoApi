@@ -13,10 +13,11 @@ To create this user, we make a `POST` Request to:
 `https://sandbox.momodeveloper.mtn.com/v1_0/apiuser`
 
 We pass the following in the `HEADER` along with the request.
+```diff
 -  X-Reference-Id (this is any string auto generated to work as the ID of the application)
 -  Content-Type (application/json)
 -  Ocp-Apim-Subscription-Key (this is the primary key that is found on your profile when you create the account with MTN)
-
+```
 Then in the Body of the request we will have:
 **{ "providerCallbackHost": "string" }**
 
