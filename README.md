@@ -69,7 +69,8 @@ In the Header we pass the following:
 ```
 
 And in the body of the request:
-{
+```diff
+*[{
   "amount": "string",
   "currency": "string",
   "externalId": "string",
@@ -79,7 +80,8 @@ And in the body of the request:
   },
   "payerMessage": "string",
   "payeeNote": "string"
-}
+}]
+```
 
 ### To confirm the status of the Payment
 
