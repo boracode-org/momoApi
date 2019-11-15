@@ -1,1 +1,30 @@
-# momoApi
+# MyService App momoApi Integration
+To get started with making the API, first you need to make an account on 
+the MTN Developer Website. After that you need to subscribe to the specific 
+services. In this case, we subscribed to Collections and this service enables
+us to make collect payments from users through the Application
+
+Lets get started in the Integration.
+
+## Create a default User
+Usually this default user can be called the Application that is going to
+consume the API.
+To create this user, we make a `POST` Request to:
+`https://sandbox.momodeveloper.mtn.com/v1_0/apiuser`
+
+We pass the following in the `HEADER` along with the request.
+-  X-Reference-Id (this is any string auto generated to work as the ID of the application)
+-  Content-Type (application/json)
+-  Ocp-Apim-Subscription-Key (this is the primary key that is found on your profile when you create the account with MTN)
+
+Then in the Body of the request we will have:
+**{ "providerCallbackHost": "string" }**
+
+The providerCallbackHost id the URL of your application, for testing cases you can use **localhost:5000**
+
+### Verify User creation
+After making a request to create the user, we need to also comfirm the user was created and exists in the System.
+To do that, we make a `GET` request to `https://sandbox.momodeveloper.mtn.com/v1_0/apiuser/{X-Reference-Id}`.
+
+As you can see, the `X-Reference-Id` is passed as a parameter, this is the very refence ID we used when creating the User.
+
