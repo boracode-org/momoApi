@@ -28,3 +28,13 @@ To do that, we make a `GET` request to `https://sandbox.momodeveloper.mtn.com/v1
 
 As you can see, the `X-Reference-Id` is passed as a parameter, this is the very refence ID we used when creating the User.
 
+### Create a API Key for the User Created
+The next step is to create an API Key for the user we just created, to do this we are going to make a request to 
+`https://sandbox.momodeveloper.mtn.com/v1_0/apiuser/{X-Reference-Id}/apikey`
+
+The **X-Reference-Id** is passed as the Parameter and then along with the Headers we are going to provide the `Ocm-Apmin-Subscription-Key`
+Again, this is the primary key on your Profile
+
+The `API Key` and the `X-Reference-Key` is are going to be combined create an `Authorization Key`
+To do this just combine the two ie `APIKey + X-Reference-Key` and then encode them to **Base64**.
+![#f03c15] `Hold tight to that Authorization, its going to be the circle of Everything!`
