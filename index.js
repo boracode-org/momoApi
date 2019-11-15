@@ -1,57 +1,54 @@
-// $(function() {
-//     var params = {
-//         // Request parameters
-//     };
-//     // https://sandbox.momodeveloper.mtn.com/collection
-//     $.ajax({
-//         url: "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay?" + $.param(params),
-//         beforeSend: function(xhrObj){
-//             // Request headers
-//             xhrObj.setRequestHeader("Authorization","");
-//             xhrObj.setRequestHeader("X-Callback-Url","");
-//             xhrObj.setRequestHeader("X-Reference-Id","");
-//             xhrObj.setRequestHeader("X-Target-Environment","");
-//             xhrObj.setRequestHeader("Content-Type","application/json");
-//             xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","{subscription key}");
-//         },
-//         type: "POST",
-//         // Request body
-//         data: "{body}",
-//     })
-//     .done(function(data) {
-//         alert("success");
-//     })
-//     .fail(function() {
-//         alert("error");
-//     });
-// });
-
 const express = require('express')
 const bodyParser = require('body-parser')
+const momo = require('mtn-momo')
+require('dotenv').config()
+const http = require('http')
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 
-const user = 'ec315ecb-e9e7-4d96-a1c1-697f4640478d'
-const password = 'b1d6dcee8a5444e8890405cee69fcf21'
-const credentials = user + ':' + password
-const auth = btoa(credentials)
-console.log(auth)
-app.post('https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay', async (req, res) => {
+// Setup Sandbox User
+const { Collections, Disbursements } = momo.create({
+    callbackHost: process.env.HOST
+});
 
-})
-// Subscription key is assigned to Ocp-Apim-Subscription-Key(My general Password) in the header
-// The Provider sends a POST {baseURL}/apiuser/{APIUser}/apikey request to Wallet platform
-// Key id returned for that user who made the request
-// {
-//     "apiKey": "b1d6dcee8a5444e8890405cee69fcf21"
-// }
-// We then make a GET request to MTN to get that apiKey
+const collections = Collections({
+    userSecret: process.env.USER_SECRET,
+    userId: process.env.USER_ID,
+    primaryKey: process.env.PRIMARY_KEY
+});
 
-// My user -- ec315ecb-e9e7-4d96-a1c1-697f4640478d
 
-// Encoded auth -- ZWMzMTVlY2ItZTllNy00ZDk2LWExYzEtNjk3ZjQ2NDA0NzhkYjFkNmRjZWU4YTU0NDRlODg5MDQwNWNlZTY5ZmNmMjE=
+// Make request to pay
+collections
+    .requestToPay({
+        amount: '50',
+        currency: 'EUR',
+        externalId: '123456',
+        payer: {
+            partyIdType: "MSISDN",
+            partyId: "256774290781"
+        },
+        payerMessage: 'Am running a test',
+        payeeNote: 'Hello, are you working'
+    })
+    .then(transactionId => {
+        console.log({transactionId})
+        // Get status of transaction
+        return collections.getTransaction(transactionId)
+    })
+    .then(transaction => {
+        console.log({transaction})
 
-// To request for a token you need password => api key generated    |
-//                                                                  |----POSTMAN (go under authorication and choose basic Auth)
-// then user name => uuid that was generated(X-Reference-Id)        |
+        // Get account balance
+        return collections.getBalance()
+    })
+    .then(accountBalance => {
+        console.log(accountBalance)
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
+let port = process.env.USER_ID
+console.log(port)
