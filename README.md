@@ -41,3 +41,45 @@ To do this just combine the two ie `APIKey + X-Reference-Key` and then encode th
 ```diff
 - Hold tight to that Authorization, its going to be the circle of Everything!
 ```
+
+## Making Request for Payment
+Now that we are done creating a default User and provided Authorization to that User, We now 
+want to invoke payments. Each time a payment has to be made, we first need to make a request to get a token 
+for that particular transaction.
+So lets get started, shall we...
+
+### Request payment Token
+We are going to make a request to `https://sandbox.momodeveloper.mtn.com/collection/token/`
+In the **Headers**, we will provide the `Ocp-Apim-Subscription-Key` and the `Authorization`
+This token is supposed to Authorize the payment that is going to take place
+
+Just to take note, this token expires in about 5 minutes of request.
+
+### Make request to Pay
+This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system.
+
+Here we make a POST request to `https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay`
+In the Header we pass the following:
+```diff
+- Authorization
+- X-Reference-Id (The id of the Clients to the application)
+- X-Target-Environment (URl of Application)
+- Content-Type
+- Ocp-Apim-Subscription-Key
+```
+
+And in the body of the request:
+{
+  "amount": "string",
+  "currency": "string",
+  "externalId": "string",
+  "payer": {
+    "partyIdType": "MSISDN",
+    "partyId": "string"
+  },
+  "payerMessage": "string",
+  "payeeNote": "string"
+}
+
+### To confirm the status of the Payment
+
